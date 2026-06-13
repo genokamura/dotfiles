@@ -95,6 +95,12 @@ if command -v fzf >/dev/null 2>&1; then
   fi
 fi
 
+# fnm (Node version manager) — puts the selected Node on PATH, auto-switches
+# on `cd` into dirs with a .nvmrc / .node-version file.
+if command -v fnm >/dev/null 2>&1; then
+  eval "$(fnm env --use-on-cd --shell zsh)"
+fi
+
 # zoxide (smarter cd) if available — provides `z`
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 

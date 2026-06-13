@@ -27,7 +27,7 @@ curl -fsSL https://raw.githubusercontent.com/genokamura/dotfiles/main/install.sh
 
 1. リポジトリを `~/.dotfiles` に clone（実行済みチェックアウト内からの実行も検出）
 2. システムパッケージ（git, zsh, tmux, ripgrep, fd, fzf ...）を apt で導入
-3. 最新安定版 Neovim / starship / zsh プラグイン / (WSL なら) win32yank を導入
+3. 最新安定版 Neovim / Node.js(v22, fnm 経由) / starship / zsh プラグイン / (WSL なら) win32yank を導入
 4. 各設定ファイルをシンボリックリンク（既存ファイルは `~/.dotfiles-backup/<時刻>/` へ退避）
 5. デフォルトシェルを zsh に変更
 
@@ -107,7 +107,7 @@ Leader = `Space`。`<leader>` を押すと [which-key](https://github.com/folke/
 | `<C-]>` | i | 候補を破棄 |
 | `<leader>ap` / `<leader>aP` | n | Copilot トグル / 状態確認 |
 
-> 初回のみ `:Copilot auth` で認証が必要です（GitHub Copilot サブスクリプションと Node.js 18+ が前提）。`:Copilot status` で確認できます。
+> 初回のみ `:Copilot auth` で認証が必要です（GitHub Copilot サブスクリプションが前提）。`:Copilot status` で確認できます。Node.js は install.sh が **fnm 経由で v22** を導入します（`NODE_VERSION` 環境変数で変更可）。
 
 
 ## シェルのヘルパ

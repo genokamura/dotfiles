@@ -77,7 +77,6 @@ apt_packages() {
     ripgrep fd-find fzf
     build-essential
     python3 python3-pip
-    nodejs npm           # required by several LSP servers / formatters (ts_ls, pyright, yamlls, prettier, ...)
   )
   sudo apt-get update -qq
   sudo apt-get install -y -qq "${pkgs[@]}" >/dev/null
@@ -111,6 +110,36 @@ install_neovim() {
     || { warn "Release download failed; falling back to apt"; sudo apt-get install -y -qq neovim >/dev/null; return 0; }
   ln -sf "$dest/bin/nvim" "$HOME/.local/bin/nvim"
   ok "Neovim installed to ~/.local/bin/nvim"
+}
+
+install_node() {
+  local want="${NODE_VERSION:-22}"
+  # Already have a new-enough Node? Nothing to do.
+  if have node; then
+    local cur; cur="$(node -v 2>/dev/null | sed 's/^v\([0-9]*\).*/\1/')"
+    if [ -n "$cur" ] && [ "$cur" -ge "$want" ] 2>/dev/null; then
+      ok "Node $(node -v) already satisfies >= v${want}"
+      return 0
+    fi
+  fi
+
+  # Install fnm (single static binary) into ~/.local/bin if missing.
+  if ! have fnm; then
+    info "Installing fnm (Node version manager)"
+    curl -fsSL https://fnm.vercel.app/install \
+      | bash -s -- --install-dir "$HOME/.local/bin" --skip-shell >/dev/null 2>&1 \
+      && ok "fnm installed" \
+      || { warn "fnm install failed; install Node >= v${want} manually"; return 0; }
+  fi
+
+  export PATH="$HOME/.local/bin:$PATH"
+  eval "$(fnm env 2>/dev/null)" 2>/dev/null || true
+  info "Installing Node v${want} via fnm"
+  if fnm install "$want" >/dev/null 2>&1 && fnm default "$want" >/dev/null 2>&1; then
+    ok "Node $(fnm exec --using="$want" node -v 2>/dev/null) installed and set as default"
+  else
+    warn "fnm could not install Node v${want}; run manually: fnm install ${want}"
+  fi
 }
 
 install_starship() {
@@ -276,6 +305,7 @@ main() {
 
   apt_packages
   install_neovim
+  install_node
   install_starship
   install_zsh_plugins
   install_wsl_clipboard
