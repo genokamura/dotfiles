@@ -62,6 +62,7 @@ dotfiles/
 ├── tmux/                # .tmux.conf（Ctrl-a prefix・vim風ペイン操作）
 ├── ripgrep/             # .ripgreprc
 ├── editorconfig/        # .editorconfig
+├── claude/              # Claude Code 資産（CLAUDE.md / commands / skills / agents）
 └── bin/                 # clip / codeshare などのヘルパスクリプト
 ```
 
@@ -105,6 +106,26 @@ Leader = `Space`。`<leader>` を押すと [which-key](https://github.com/folke/
 | `mkcd` / `extract` / `fcd` / `fkill` / `note` | よく使う小物関数 |
 
 主なエイリアス: `v`=nvim, `g`=git, `gs`=git status, `gpu`=push -u, `t`=tmux, `dotf`=dotfiles へ cd など（`zsh/aliases.zsh` 参照）。
+
+## Claude Code 資産の管理（プロンプト / Skills）
+
+`claude/` 配下を `~/.claude/` にシンボリックリンクし、プロンプトや Skills を
+リポジトリで一元管理します。`~/.claude/` の実行時状態（`projects/`, `todos/` 等）は
+触らず、必要なものだけをリンクします。
+
+| リポジトリ | リンク先 | 内容 |
+|------------|----------|------|
+| `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | グローバルなメモリ／指示 |
+| `claude/commands/` | `~/.claude/commands/` | カスタムスラッシュコマンド（プロンプトファイル） |
+| `claude/skills/` | `~/.claude/skills/` | Skills |
+| `claude/agents/` | `~/.claude/agents/` | サブエージェント定義 |
+
+- **プロンプト追加**: `claude/commands/<name>.md` を作ると `/<name>` で呼べます（雛形: `explain-ja.md`）。
+- **Skill 追加**: `claude/skills/<name>/SKILL.md` を作成（雛形: `example-skill/`）。`description` に「いつ使うか」を具体的に書くと自動起動の精度が上がります。
+- **settings.json** は既存の権限設定を上書きしないよう自動リンクしていません。使う場合は手動で:
+  ```bash
+  cp ~/.dotfiles/claude/settings.json.example ~/.claude/settings.json
+  ```
 
 ## git の identity 設定
 

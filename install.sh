@@ -200,6 +200,16 @@ create_symlinks() {
   link tmux/.tmux.conf       "$HOME/.tmux.conf"
   link editorconfig/.editorconfig "$HOME/.editorconfig"
 
+  # Claude Code assets (memory / prompts / skills / agents).
+  # Only specific paths are linked so Claude's runtime state under ~/.claude
+  # (projects, todos, ...) is left untouched. settings.json is intentionally
+  # NOT linked to avoid clobbering live permissions — see claude/settings.json.example.
+  mkdir -p "$HOME/.claude"
+  link claude/CLAUDE.md "$HOME/.claude/CLAUDE.md"
+  link claude/commands  "$HOME/.claude/commands"
+  link claude/skills    "$HOME/.claude/skills"
+  link claude/agents    "$HOME/.claude/agents"
+
   # executable helpers
   if [ -d "$DOTFILES_DIR/bin" ]; then
     for f in "$DOTFILES_DIR/bin/"*; do
