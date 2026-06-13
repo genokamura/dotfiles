@@ -79,8 +79,19 @@ return {
     event = "VeryLazy",
     config = function()
       require("mini.pairs").setup()       -- auto-close brackets/quotes
-      require("mini.surround").setup()    -- sa/sd/sr to add/delete/replace surroundings
       require("mini.ai").setup()          -- richer a/i text objects
+      -- Surroundings under a `gs` prefix so the bare `s` stays free for flash.
+      require("mini.surround").setup({
+        mappings = {
+          add = "gsa",            -- gsaiw) → surround inner word with ()
+          delete = "gsd",         -- gsd"   → delete surrounding "
+          find = "gsf",
+          find_left = "gsF",
+          highlight = "gsh",
+          replace = "gsr",        -- gsr([  → replace ( with [
+          update_n_lines = "gsn",
+        },
+      })
     end,
   },
 

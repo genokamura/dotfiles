@@ -71,3 +71,11 @@ vim.diagnostic.config({
 
 -- Rounded borders for hover / signature help
 vim.o.winborder = "rounded"
+
+-- Disable unused remote-plugin providers to keep :checkhealth clean and
+-- startup fast. (This does NOT affect mason-installed LSP servers, which run
+-- as separate binaries and only need node/python on PATH.)
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_node_provider = 0

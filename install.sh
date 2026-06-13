@@ -77,6 +77,7 @@ apt_packages() {
     ripgrep fd-find fzf
     build-essential
     python3 python3-pip
+    nodejs npm           # required by several LSP servers / formatters (ts_ls, pyright, yamlls, prettier, ...)
   )
   sudo apt-get update -qq
   sudo apt-get install -y -qq "${pkgs[@]}" >/dev/null

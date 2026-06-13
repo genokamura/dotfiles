@@ -24,6 +24,7 @@ require("lazy").setup({
   },
   defaults = { lazy = true },         -- lazy-load by default; specs opt in to eager
   install = { colorscheme = { "tokyonight", "habamax" } },
+  rocks = { enabled = false },        -- no plugin needs luarocks; skip hererocks
   checker = { enabled = true, notify = false },  -- background update checks
   change_detection = { notify = false },
   ui = { border = "rounded" },
