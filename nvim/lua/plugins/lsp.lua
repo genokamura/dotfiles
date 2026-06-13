@@ -56,8 +56,21 @@ return {
 
       -- mason-lspconfig installs the servers and (automatic_enable) calls
       -- vim.lsp.enable() for each once available.
+      --
+      -- Only auto-install servers whose toolchain is present. gopls needs the
+      -- Go toolchain (`go install`), so skip it unless `go` is on PATH —
+      -- otherwise mason reports a failed install on every startup. The config
+      -- still applies, so `:MasonInstall gopls` works once Go is installed.
+      local needs_toolchain = { gopls = "go" }
+      local ensure = {}
+      for name in pairs(servers) do
+        local tool = needs_toolchain[name]
+        if not tool or vim.fn.executable(tool) == 1 then
+          ensure[#ensure + 1] = name
+        end
+      end
       require("mason-lspconfig").setup({
-        ensure_installed = vim.tbl_keys(servers),
+        ensure_installed = ensure,
         automatic_enable = true,
       })
 
