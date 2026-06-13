@@ -2,11 +2,14 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    -- Pin to the classic `master` branch: the `main` branch is a rewrite with
+    -- a different API and no `nvim-treesitter.configs`.
+    branch = "master",
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
     cmd = { "TSUpdate", "TSInstall", "TSInstallInfo" },
     dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects",
+      { "nvim-treesitter/nvim-treesitter-textobjects", branch = "master" },
     },
     opts = {
       ensure_installed = {

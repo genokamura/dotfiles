@@ -1,25 +1,28 @@
 -- lsp.lua  --  language servers (mason) + formatting (conform)
+-- Uses the Neovim 0.11 native vim.lsp.config / vim.lsp.enable API
+-- (no deprecated require("lspconfig") framework).
 
 return {
   -- Mason: manage LSP servers / formatters / linters.
   {
     "williamboman/mason.nvim",
-    cmd = { "Mason", "MasonInstall", "MasonUpdate" },
     build = ":MasonUpdate",
+    cmd = { "Mason", "MasonInstall", "MasonUpdate", "MasonLog" },
     opts = { ui = { border = "rounded" } },
   },
 
-  -- LSP configuration
+  -- LSP configuration. nvim-lspconfig now just ships the default per-server
+  -- configs under its `lsp/` runtime dir; we layer overrides via vim.lsp.config.
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      "williamboman/mason.nvim",
+      { "williamboman/mason.nvim", opts = {} },
       "williamboman/mason-lspconfig.nvim",
       "saghen/blink.cmp",
     },
     config = function()
-      -- Servers to manage. Empty table == default config.
+      -- Servers to manage. Empty table == defaults from nvim-lspconfig.
       local servers = {
         lua_ls = {
           settings = {
@@ -40,21 +43,23 @@ return {
         yamlls = {},
       }
 
-      require("mason").setup()
-      require("mason-lspconfig").setup({
-        ensure_installed = vim.tbl_keys(servers),
-        automatic_installation = true,
-      })
-
-      -- Capabilities advertised to servers (completion via blink.cmp).
+      -- Advertise completion capabilities (blink.cmp) to every server.
       local capabilities = require("blink.cmp").get_lsp_capabilities()
-      local lspconfig = require("lspconfig")
+      vim.lsp.config("*", { capabilities = capabilities })
+
+      -- Apply per-server overrides (merged on top of nvim-lspconfig defaults).
       for name, cfg in pairs(servers) do
-        cfg.capabilities = capabilities
-        if lspconfig[name] then
-          lspconfig[name].setup(cfg)
+        if next(cfg) ~= nil then
+          vim.lsp.config(name, cfg)
         end
       end
+
+      -- mason-lspconfig installs the servers and (automatic_enable) calls
+      -- vim.lsp.enable() for each once available.
+      require("mason-lspconfig").setup({
+        ensure_installed = vim.tbl_keys(servers),
+        automatic_enable = true,
+      })
 
       -- Buffer-local keymaps once a server attaches.
       vim.api.nvim_create_autocmd("LspAttach", {
@@ -121,7 +126,7 @@ return {
       end,
     },
     init = function()
-      -- :Format toggle command for autoformat-on-save.
+      -- :FormatToggle command for autoformat-on-save (! = buffer-local).
       vim.api.nvim_create_user_command("FormatToggle", function(args)
         if args.bang then
           vim.b.disable_autoformat = not vim.b.disable_autoformat
