@@ -1,0 +1,9 @@
+# Repo-level ignores
+
+# Neovim plugin lockfile is regenerated per-machine; keep it untracked by default.
+# (Comment the next line out if you prefer to pin plugin versions in the repo.)
+nvim/lazy-lock.json
+
+# Local, machine-specific overrides
+*.local
+.DS_Store

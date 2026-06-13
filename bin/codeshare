@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# codeshare  --  copy a file (or stdin) to the clipboard as a fenced Markdown
+#                code block, ready to paste into chat / AI tools.
+#
+#   codeshare main.go            # copies ```go ... ``` to clipboard
+#   codeshare main.go -L 10:40   # only lines 10-40
+#   cat snippet | codeshare      # from stdin (language guessed as text)
+#   codeshare -l python < f      # force language tag
+#
+# Pairs with `clip` from this dotfiles repo.
+set -euo pipefail
+
+lang=""
+range=""
+file=""
+
+usage() { sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -l|--lang)  lang="$2"; shift 2 ;;
+    -L|--lines) range="$2"; shift 2 ;;
+    -h|--help)  usage 0 ;;
+    -*)         echo "codeshare: unknown option $1" >&2; usage 1 ;;
+    *)          file="$1"; shift ;;
+  esac
+done
+
+# Guess language from file extension when not given.
+guess_lang() {
+  case "${1##*.}" in
+    sh|bash|zsh) echo bash ;; py) echo python ;; js|mjs|cjs) echo javascript ;;
+    ts) echo typescript ;; tsx) echo tsx ;; jsx) echo jsx ;; go) echo go ;;
+    rs) echo rust ;; lua) echo lua ;; c) echo c ;; h|hpp) echo cpp ;;
+    cpp|cc|cxx) echo cpp ;; java) echo java ;; rb) echo ruby ;; php) echo php ;;
+    md) echo markdown ;; json) echo json ;; yml|yaml) echo yaml ;;
+    toml) echo toml ;; sql) echo sql ;; html) echo html ;; css) echo css ;;
+    vim) echo vim ;; *) echo "" ;;
+  esac
+}
+
+# Read the content.
+if [ -n "$file" ]; then
+  [ -f "$file" ] || { echo "codeshare: no such file: $file" >&2; exit 1; }
+  [ -z "$lang" ] && lang="$(guess_lang "$file")"
+  if [ -n "$range" ]; then
+    content="$(sed -n "${range/:/,}p" "$file")"
+  else
+    content="$(cat "$file")"
+  fi
+else
+  content="$(cat)"
+fi
+
+# Build a fenced block and ship it to the clipboard.
+clip_cmd="cat"
+command -v clip >/dev/null 2>&1 && clip_cmd="clip"
+
+{ printf '```%s\n%s\n```\n' "$lang" "$content"; } | "$clip_cmd"
+
+lines="$(printf '%s\n' "$content" | wc -l | tr -d ' ')"
+echo "codeshare: copied ${lines} lines${lang:+ ($lang)} to clipboard" >&2

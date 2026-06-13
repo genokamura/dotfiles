@@ -1,0 +1,82 @@
+# .gitconfig  --  global git configuration
+# NOTE: set your identity locally so it isn't committed to the dotfiles repo:
+#   git config --global user.name  "Your Name"
+#   git config --global user.email "you@example.com"
+# Or drop them in ~/.gitconfig.local (sourced at the bottom via [include]).
+
+[init]
+	defaultBranch = main
+
+[core]
+	editor = nvim
+	excludesfile = ~/.gitignore_global
+	autocrlf = input          ; keep LF in the repo even on WSL/Windows mounts
+	pager = delta             ; falls back gracefully if delta is absent
+
+[column]
+	ui = auto
+
+[branch]
+	sort = -committerdate
+
+[tag]
+	sort = version:refname
+
+[pull]
+	ff = only
+
+[push]
+	default = simple
+	autoSetupRemote = true     ; `git push` works on fresh branches
+
+[fetch]
+	prune = true
+	pruneTags = true
+
+[rebase]
+	autoStash = true
+	autosquash = true
+
+[merge]
+	conflictstyle = zdiff3
+
+[diff]
+	algorithm = histogram
+	colorMoved = default
+	mnemonicPrefix = true
+	renames = true
+
+[rerere]
+	enabled = true
+
+[help]
+	autocorrect = prompt
+
+[color]
+	ui = auto
+
+[delta]
+	navigate = true
+	line-numbers = true
+	side-by-side = false
+
+[interactive]
+	diffFilter = delta --color-only
+
+[alias]
+	st = status -sb
+	co = checkout
+	sw = switch
+	br = branch
+	ci = commit
+	amend = commit --amend --no-edit
+	unstage = restore --staged
+	last = log -1 HEAD --stat
+	lg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) %C(dim white)%an%C(reset) %C(green)(%ar)%C(reset)%C(auto)%d%C(reset)%n          %s'
+	undo = reset --soft HEAD~1
+	wip = !git add -A && git commit -m 'wip'
+	aliases = config --get-regexp ^alias\\.
+
+# Local, machine-specific overrides (identity, work email, etc.). Optional.
+[include]
+	path = ~/.gitconfig.local

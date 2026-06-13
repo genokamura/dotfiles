@@ -1,0 +1,41 @@
+# Global gitignore — patterns ignored across every repository.
+
+# OS cruft
+.DS_Store
+.DS_Store?
+Thumbs.db
+desktop.ini
+ehthumbs.db
+$RECYCLE.BIN/
+
+# Editor / IDE
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.sublime-workspace
+
+# Neovim / Vim
+[._]*.un~
+Session.vim
+.netrwhist
+
+# Build / dependency dirs that are almost never wanted globally
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Logs and temp
+*.log
+*.tmp
+.cache/
+
+# Secrets — never commit these by accident
+.env
+.env.*
+!.env.example
+*.pem
+*.key

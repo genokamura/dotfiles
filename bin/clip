@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# clip  --  universal clipboard bridge (copy/paste) for WSL2, Linux, macOS.
+#
+#   echo hi | clip          # copy stdin to the system clipboard
+#   clip file.txt           # copy a file's contents
+#   clip -o                 # paste clipboard to stdout
+#   clip -p                 # alias for -o
+#
+# On WSL2 it talks to the *Windows* clipboard so copy/paste works seamlessly
+# between the terminal and GUI apps (browser, chat tools, etc.).
+set -euo pipefail
+
+is_wsl() { grep -qiE "(microsoft|wsl)" /proc/version 2>/dev/null; }
+
+copy() {
+  if is_wsl; then
+    if command -v win32yank.exe >/dev/null 2>&1; then win32yank.exe -i --crlf
+    elif command -v clip.exe >/dev/null 2>&1;     then clip.exe
+    else cat >/dev/null; echo "clip: no Windows clipboard tool found" >&2; return 1
+    fi
+  elif command -v wl-copy >/dev/null 2>&1;  then wl-copy
+  elif command -v xclip   >/dev/null 2>&1;  then xclip -selection clipboard
+  elif command -v xsel    >/dev/null 2>&1;  then xsel --clipboard --input
+  elif command -v pbcopy  >/dev/null 2>&1;  then pbcopy
+  else echo "clip: no clipboard backend available" >&2; return 1
+  fi
+}
+
+paste() {
+  if is_wsl; then
+    if command -v win32yank.exe >/dev/null 2>&1; then win32yank.exe -o --lf
+    else powershell.exe -NoProfile -Command Get-Clipboard 2>/dev/null | tr -d '\r'
+    fi
+  elif command -v wl-paste >/dev/null 2>&1;  then wl-paste
+  elif command -v xclip    >/dev/null 2>&1;  then xclip -selection clipboard -o
+  elif command -v xsel     >/dev/null 2>&1;  then xsel --clipboard --output
+  elif command -v pbpaste  >/dev/null 2>&1;  then pbpaste
+  else echo "clip: no clipboard backend available" >&2; return 1
+  fi
+}
+
+case "${1:-}" in
+  -o|-p|--paste) paste ;;
+  -h|--help)
+    sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'
+    ;;
+  "")  copy ;;                       # stdin -> clipboard
+  *)   cat -- "$@" | copy ;;         # file(s) -> clipboard
+esac
