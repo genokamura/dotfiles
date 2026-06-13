@@ -96,6 +96,20 @@ Leader = `Space`。`<leader>` を押すと [which-key](https://github.com/folke/
 
 > `claude` CLI（[Claude Code](https://claude.com/claude-code)）が PATH 上に必要です。未導入でも Neovim は問題なく起動します。
 
+### GitHub Copilot（インライン補完）
+
+入力中にグレーのゴーストテキストで候補を表示します（blink.cmp のメニューとは別レイヤー、メニュー表示中は自動で隠れます）。
+
+| キー | モード | 動作 |
+|------|--------|------|
+| `<C-l>` | i | 候補を確定 |
+| `<M-]>` / `<M-[>` | i | 次 / 前の候補 |
+| `<C-]>` | i | 候補を破棄 |
+| `<leader>ap` / `<leader>aP` | n | Copilot トグル / 状態確認 |
+
+> 初回のみ `:Copilot auth` で認証が必要です（GitHub Copilot サブスクリプションと Node.js 18+ が前提）。`:Copilot status` で確認できます。
+
+
 ## シェルのヘルパ
 
 | コマンド | 説明 |
