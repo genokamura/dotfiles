@@ -230,10 +230,16 @@ set_default_shell() {
   fi
   info "Setting zsh as the default shell"
   if grep -q "^${zsh_path}$" /etc/shells 2>/dev/null || echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null; then
+    # Plain chsh needs a PAM password prompt, which fails under `curl | bash`
+    # (non-interactive) or when the account has no password. Fall back to
+    # `sudo chsh`, which edits /etc/passwd directly without prompting.
     if chsh -s "$zsh_path" 2>/dev/null; then
       ok "Default shell set to zsh (restart your shell to apply)"
+    elif sudo chsh -s "$zsh_path" "$USER" 2>/dev/null; then
+      ok "Default shell set to zsh via sudo (restart your shell to apply)"
     else
-      warn "chsh failed. Run manually: chsh -s $zsh_path"
+      warn "Could not change shell automatically. Run manually:"
+      warn "    sudo chsh -s $zsh_path $USER"
     fi
   fi
 }
