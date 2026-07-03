@@ -17,8 +17,9 @@ scrum スキル・eng-core スキル・~/.claude/skills/scrum/agent-team.md
 2. ボードから実行可能なタスク（depends 解消済み・対象が重ならない）を選ぶ。
 3. agent-team.md のパイプラインに従い実行する:
    - ボードに割当を書き込んでから dev-implementer をディスパッチ
-     （並列時は worktree 分離。タスク定義・受入基準・読むべきファイルを
-     プロンプトに明記）
+     （並列時は worktree 分離。プロンプトは agent-team.md の
+     **コンテキストパケット規約**に従って組み立てる: task/why/scope/
+     inputs/constraints/output を全量、最初の1ターンで渡す）
    - 完了報告 → dev-reviewer で敵対的レビュー（差し戻し最大2回）
    - approve → qa-verifier でゲート・受入基準を実行検証
    - pass → 統合し、ボードを「統合済み」に更新
