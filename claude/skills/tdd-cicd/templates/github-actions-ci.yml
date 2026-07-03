@@ -17,13 +17,13 @@ jobs:
       # TODO: ランタイムのセットアップ（例: actions/setup-node@v4 / setup-python@v5）
       # TODO: 依存インストール（lockfile ベース: npm ci / pip-sync 等）
       - name: lint
-        run: echo "TODO: TEST_STRATEGY.md の lint コマンド"
+        run: 'echo "TODO: TEST_STRATEGY.md の lint コマンド"'
       - name: typecheck
-        run: echo "TODO: 型チェックコマンド"
+        run: 'echo "TODO: 型チェックコマンド"'
       - name: unit
-        run: echo "TODO: unit テストコマンド"
+        run: 'echo "TODO: unit テストコマンド"'
       - name: build
-        run: echo "TODO: ビルドコマンド（アーティファクトは1回だけ作る）"
+        run: 'echo "TODO: ビルドコマンド（アーティファクトは1回だけ作る）"'
       # TODO: アーティファクトの保存（actions/upload-artifact）— 環境ごとに再ビルドしない
 
   # ステージ2: integration — 実インフラはコンテナで本物を使う（古典学派）
@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: integration tests
-        run: echo "TODO: integration テストコマンド（ローカルと同一）"
+        run: 'echo "TODO: integration テストコマンド（ローカルと同一）"'
 
   # ステージ3: e2e — 薄いスモークのみ。重い場合は schedule（nightly）へ分離
   e2e:
@@ -49,7 +49,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: e2e smoke
-        run: echo "TODO: E2E スモーク（本数を絞る）"
+        run: 'echo "TODO: E2E スモーク（本数を絞る）"'
 
 # 運用メモ:
 # - main の保護: commit / integration を required checks に設定（常にデプロイ可能な main）
