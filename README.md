@@ -136,6 +136,18 @@ Leader = `Space`。`<leader>` を押すと [which-key](https://github.com/folke/
 
 - **プロンプト追加**: `claude/commands/<name>.md` を作ると `/<name>` で呼べます（雛形: `explain-ja.md`）。
 - **Skill 追加**: `claude/skills/<name>/SKILL.md` を作成（雛形: `example-skill/`）。`description` に「いつ使うか」を具体的に書くと自動起動の精度が上がります。
+
+### ウォーターフォール開発ハーネス
+
+要件定義→基本設計→詳細設計→実装→テスト→受入 のフェーズ管理を Claude Code に課す汎用ハーネスです。プロセス規律は `claude/skills/waterfall/`（テンプレート同梱）、入口は3つのコマンド:
+
+| コマンド | 動作 |
+|----------|------|
+| `/wf-init` | 対象リポジトリに `docs/`（PROJECT_STATUS.md + 要件定義書）を敷いて管理下に置く |
+| `/wf-gate` | フェーズゲート審査（チェックリスト＋トレーサビリティ突合）→ ユーザー承認 → 工程移行 |
+| `/wf-status` | 現在地・成果物充足度・トレーサビリティ欠落の報告（読み取り専用） |
+
+規律の要点: ドキュメント先行（承認前に次工程の成果物を作らない）/ フェーズ移行はユーザー承認必須 / REQ→DSN→DTL→TST の ID トレーサビリティ / 承認済みドキュメントの変更は CHG 記録。`docs/PROJECT_STATUS.md` があるリポジトリでは Skill が自動で読み込まれます。
 - **settings.json** は既存の権限設定を上書きしないよう自動リンクしていません。使う場合は手動で:
   ```bash
   cp ~/.dotfiles/claude/settings.json.example ~/.claude/settings.json
