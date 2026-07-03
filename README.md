@@ -171,6 +171,8 @@ Leader = `Space`。`<leader>` を押すと [which-key](https://github.com/folke/
 **ウォーターフォール**: `/wf-init` → `/wf-gate`（チェックリスト審査 → ユーザー承認 → 工程移行）→ `/wf-status`。ドキュメント先行、承認前に次工程の成果物を作りません。
 
 `docs/PRODUCT_BACKLOG.md`（スクラム）または `docs/PROJECT_STATUS.md`（ウォーターフォール）があるリポジトリでは、対応する Skill が自動で読み込まれます。
+
+**ハーネス自体の拡張**: `/harness-design <テーマ>` で、新しいプロセスハーネス（Skill/Command/Agent）の設計・実装を定型手順（要求明確化 → 最新モデル知見の調査 → 設計合意 → 実装 → 検証 → push → 改善ループ定義）と設計原則チェックリスト（3層アーキテクチャ・LLM補償5原則・コンテキストパケット・coverage-first・モデルルーティング等）に従って再現性高く実行できます。
 - **settings.json** は既存の権限設定を上書きしないよう自動リンクしていません。使う場合は手動で:
   ```bash
   cp ~/.dotfiles/claude/settings.json.example ~/.claude/settings.json
