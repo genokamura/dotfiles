@@ -1,0 +1,57 @@
+# CI 雛形 — tdd-cicd スキルのステージ設計に対応
+# 方針: ローカルと同一コマンドのみを呼ぶ（CI 固有の検証ロジックを書かない）。
+# TODO をプロジェクトの検証コマンド表（docs/TEST_STRATEGY.md）に合わせて置換する。
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  # ステージ1: commit — 安く速い検証を先に。目標 < 10分
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # TODO: ランタイムのセットアップ（例: actions/setup-node@v4 / setup-python@v5）
+      # TODO: 依存インストール（lockfile ベース: npm ci / pip-sync 等）
+      - name: lint
+        run: echo "TODO: TEST_STRATEGY.md の lint コマンド"
+      - name: typecheck
+        run: echo "TODO: 型チェックコマンド"
+      - name: unit
+        run: echo "TODO: unit テストコマンド"
+      - name: build
+        run: echo "TODO: ビルドコマンド（アーティファクトは1回だけ作る）"
+      # TODO: アーティファクトの保存（actions/upload-artifact）— 環境ごとに再ビルドしない
+
+  # ステージ2: integration — 実インフラはコンテナで本物を使う（古典学派）
+  integration:
+    needs: commit
+    runs-on: ubuntu-latest
+    # TODO: services で実物を起動（例）
+    # services:
+    #   postgres:
+    #     image: postgres:16
+    #     env: { POSTGRES_PASSWORD: test }
+    #     ports: ['5432:5432']
+    steps:
+      - uses: actions/checkout@v4
+      - name: integration tests
+        run: echo "TODO: integration テストコマンド（ローカルと同一）"
+
+  # ステージ3: e2e — 薄いスモークのみ。重い場合は schedule（nightly）へ分離
+  e2e:
+    needs: integration
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: e2e smoke
+        run: echo "TODO: E2E スモーク（本数を絞る）"
+
+# 運用メモ:
+# - main の保護: commit / integration を required checks に設定（常にデプロイ可能な main）
+# - ラチェット: カバレッジ下限等の緩和は PR レビューで人間承認 + 例外記録
+# - フレーク: retry で握りつぶさない。隔離 → Issue → 期限（TEST_STRATEGY.md）

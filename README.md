@@ -146,6 +146,7 @@ Leader = `Space`。`<leader>` を押すと [which-key](https://github.com/folke/
 | Skill | 役割 |
 |-------|------|
 | `eng-core` | 共通エンジニアリング規律: TDD・検証ゲート・ADR・セキュリティ（STRIDE簡易版）・preflight チェックリスト・誠実性ルール |
+| `tdd-cicd` | 古典学派TDD × CI/CD: 状態検証・sociable test・モック境界・テストピラミッド / ローカル=CIパリティ・ステージ分割・ラチェット・フレーク隔離。プロジェクトごとの決定は `docs/TEST_STRATEGY.md` に外部化 |
 | `scrum` | スクラム: プロダクトバックログ（INVEST / Given-When-Then 受入基準）・スプリント・DoR/DoD・ベロシティ |
 | `waterfall` | ウォーターフォール: フェーズゲート・REQ→DSN→DTL→TST トレーサビリティ・変更管理 |
 
@@ -154,6 +155,9 @@ Leader = `Space`。`<leader>` を押すと [which-key](https://github.com/folke/
 | コマンド | 動作 |
 |----------|------|
 | `/tdd` | 1タスクを厳密な TDD で実装（テストリスト → red → green → refactor、1項目ずつ） |
+| `/test-design` | 受入基準からテストリストを設計（ピラミッド配置・実物/代役の判定・テスト名案） |
+| `/pipeline-init` | CI/CD を敷く（ローカルゲート定義 → CI は同一コマンドを呼ぶだけ → ステージ分割雛形） |
+| `/test-audit` | 既存テストを古典学派の規律で監査（実装結合・過剰モック・非決定性、読み取り専用） |
 | `/preflight` | コミット/PR 前の検証ゲート実行＋差分自己レビュー（推測チェック禁止） |
 | `/adr` | 設計判断を ADR として記録（捨てた選択肢と可逆性を必須記載） |
 
