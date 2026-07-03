@@ -164,6 +164,7 @@ Leader = `Space`。`<leader>` を押すと [which-key](https://github.com/folke/
 - **チーム**: `dev-implementer`（TDD 実装、並列時は worktree 分離）/ `dev-reviewer`（敵対的レビュー、読み取り専用）/ `qa-verifier`（ゲート・受入基準の実行検証）— 定義は `claude/agents/`
 - **パイプライン**: 実装 → レビュー（差し戻し最大2回）→ 検証 → 統合。実装・レビュー・検証は必ず別エージェント
 - **人間の関与は5決定クラスのみ**: ①ゴール/スコープ ②受入 ③ADR級の設計 ④裁定（対立・ブロック）⑤リスク（破壊的操作・セキュリティ）
+- **コスト最適化のモデル・ルーティング**: 実装は Sonnet（Opus 級コーディング品質・約6割コスト）、機械的小タスクは Haiku、critical PBI・大規模横断・フレーク切り分けは Opus に昇格（理由込みでボードに記録し、レトロで配分を検証）。差し戻し上限後は人間の前に Opus リトライ1回。詳細: `claude/skills/scrum/agent-team.md` のモデル選択ポリシー
 - **SPRINT.md のタスクボードが唯一の正**: 割当・状態遷移はディスパッチ前にボードへ書き込み、途中中断してもボードだけから再開可能
 - 調停規約の全文: `claude/skills/scrum/agent-team.md`
 

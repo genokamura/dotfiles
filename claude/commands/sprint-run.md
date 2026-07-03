@@ -15,6 +15,9 @@ scrum スキル・eng-core スキル・~/.claude/skills/scrum/agent-team.md
 1. docs/sprints/ の現行スプリントファイルを読む。タスクボードが無い・
    粒度が粗い場合は、先にタスク分解して PO に一覧を見せる。
 2. ボードから実行可能なタスク（depends 解消済み・対象が重ならない）を選ぶ。
+   各タスクについて agent-team.md の**モデル選択ポリシー**でモデルを決める
+   （既定 Sonnet / 機械的タスクは Haiku 可 / critical・大規模横断・
+   フレーク切り分けは Opus。昇格は理由込みでボードに記録）。
 3. agent-team.md のパイプラインに従い実行する:
    - ボードに割当を書き込んでから dev-implementer をディスパッチ
      （並列時は worktree 分離。プロンプトは agent-team.md の
