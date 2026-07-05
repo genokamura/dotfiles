@@ -10,7 +10,10 @@ fi
 
 # Pager
 export PAGER=less
-export LESS='-R --use-color -Dd+r -Du+b'
+# -R: keep ANSI colors, -F: quit if output fits one screen, -X: don't clear
+# screen on exit. (Matches git's default LESS=FRX; fancy -D color options are
+# not portable across less versions.)
+export LESS='-R -F -X'
 export LESSHISTFILE="$XDG_CACHE_HOME/less/history"
 
 # Colors
