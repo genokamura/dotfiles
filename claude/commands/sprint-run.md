@@ -36,6 +36,6 @@ scrum スキル・eng-core スキル・~/.claude/skills/scrum/agent-team.md
    報告し、/sprint-end（PO の受入判定）を案内する。
 
 注意:
-- エージェントの報告は鵜呑みにしない。status=done でもボード更新前に
-  changed_files と tests の整合を確認する（git log / diff で実在を確認）。
+- エージェントの報告は、ボード更新前に git の実態と突合してから反映する
+  （status=done なら changed_files と tests の実在を git log / diff で確認）。
 - 途中で中断しても、ボードだけから再開できる状態を常に保つ。
